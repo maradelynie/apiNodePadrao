@@ -5,7 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test":	"SET AMBIENT=test&& mocha test/**/*.js"
+    "apidoc":	"apidoc -i routes/ -o public/apidoc",
+    "test": "SET AMBIENT=test&& mocha test/**/*.js"
+  },
+  "apidoc": {
+    "name": "Documentação - Node Task API",
+    "template": {
+      "forceLanguage": "pt_br"
+    }
   },
   "author": "Mara <maradelynie@gmail.com>",
   "license": "ISC",
@@ -23,6 +30,7 @@
     "sqlite3": "^5.0.11"
   },
   "devDependencies": {
+    "apidoc": "^0.52.0",
     "chai": "^4.3.6",
     "mocha": "^10.0.0",
     "supertest": "^6.2.4"
