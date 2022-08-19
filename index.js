@@ -1,8 +1,8 @@
 const express = require('express');
 const consign = require('consign');
 const app = express();
-
-consign()
+require('dotenv').config({path: __dirname + '/.env'})
+consign({	verbose:	false	})
 	.include('db.js')
 	.then('models')
 	.then('associations.js')
@@ -12,4 +12,4 @@ consign()
 	.then('boot.js')
 	.into(app);
 
-	// module.exports = app;
+	module.exports = app;
