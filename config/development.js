@@ -1,4 +1,5 @@
-const	secretKey	=	process.env.JWTKEY;
+const secretKey = process.env.JWTKEY;
+const logger = require('../logger');
 
 module.exports = {
   db: {
@@ -8,6 +9,9 @@ module.exports = {
     params: {
       dialect: 'sqlite',
       storage: 'ntask.sqlite',
+      logging: (sql) => {
+        logger.info(`[${new Date()}]	${sql}`);
+      },
       define: {
         underscored: true
       }
