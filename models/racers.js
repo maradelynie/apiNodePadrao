@@ -1,23 +1,18 @@
 const { DataTypes } = require('sequelize');
 module.exports = (app) => {
-  const Tasks = app.db.define('Tasks', {
+  const Racers = app.db.define('Racers', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    title: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: true
       }
-    },
-    done: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false
     }
   });
-  return Tasks;
+  return Racers;
 };

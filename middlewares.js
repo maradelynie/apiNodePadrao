@@ -1,15 +1,15 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const cors = require('cors')
-const	morgan	=	require('morgan');
-const	logger	=	require('./logger');
-const	compression	=	require('compression');
+const morgan = require('morgan');
+const logger = require('./logger');
+const compression = require('compression');
 const helmet = require('helmet')
 
 const corsUrl = process.env.CORSURL;
 
 module.exports = app => {
-	app.set('port', 3000);
+	app.set('port', 3008);
 	app.set('json	spaces', 2);
 	app.use(morgan('common', {
 		stream: {
@@ -17,11 +17,7 @@ module.exports = app => {
 		}
 	}));
 	app.use(helmet())
-	app.use(cors({
-		origin: corsUrl,
-		methods: ['GET', 'POST', 'PUT', 'DELETE'],
-		allowedHeaders: ['Content-Type', 'Authorization']
-	}))
+	app.use(cors())
 	app.use(compression());
 	app.use(bodyParser.json());
 	app.use(app.auth.initialize());

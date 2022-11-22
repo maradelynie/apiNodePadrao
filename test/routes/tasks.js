@@ -1,7 +1,7 @@
 const jwt = require('jwt-simple');
-describe('Routes:	Tasks', () => {
+describe('Routes:	Tournaments', () => {
   const Users = app.models.users;
-  const Tasks = app.models.tasks;
+  const Tournaments = app.models.tournaments;
   let token;
   let fakeTask;
   beforeEach(async () => {
@@ -11,18 +11,18 @@ describe('Routes:	Tasks', () => {
       email: 'john@mail.net',
       password: '12345'
     });
-    await Tasks.destroy({ where: {} });
-    const tasks = await Tasks.bulkCreate([
-      { id: 1, title: 'Work', userId: user.id },
-      { id: 2, title: 'Study', userId: user.id }
+    await Tournaments.destroy({ where: {} });
+    const tournaments = await Tournaments.bulkCreate([
+      { id: 1, title: 'Work', UserId: user.id },
+      { id: 2, title: 'Study', UserId: user.id }
     ]);
-    fakeTask = tasks[0];
+    fakeTask = tournaments[0];
     token = jwt.encode({ id: user.id }, config.jwt.secret);
   });
-  describe('GET	/tasks', () => {
+  describe('GET	/tournaments', () => {
     describe('status	200', () => {
-      it('returns	a	list	of	tasks', done => {
-        request.get('/tasks')
+      it('returns	a	list	of	tournaments', done => {
+        request.get('/tournaments')
           .set('Authorization', token)
           .expect(200)
           .end((err, res) => {
@@ -35,10 +35,10 @@ describe('Routes:	Tasks', () => {
     });
   });
 
-  describe('POST	/tasks', () => {
+  describe('POST	/tournaments', () => {
     describe('status	200', () => {
       it('creates	a	new	task', done => {
-        request.post('/tasks')
+        request.post('/tournaments')
           .set('Authorization', token)
           .send({ title: 'Run' })
           .expect(200)
@@ -51,10 +51,10 @@ describe('Routes:	Tasks', () => {
     });
   });
 
-  describe('GET	/tasks/:id', () => {
+  describe('GET	/tournaments/:id', () => {
     describe('status	200', () => {
       it('returns	one	task', done => {
-        request.get(`/tasks/${fakeTask.id}`)
+        request.get(`/tournaments/${fakeTask.id}`)
           .set('Authorization', token)
           .expect(200)
           .end((err, res) => {
@@ -65,17 +65,17 @@ describe('Routes:	Tasks', () => {
     });
     describe('status	404', () => {
       it('throws	error	when	task	not	exist', done => {
-        request.get('/tasks/0')
+        request.get('/tournaments/0')
           .set('Authorization', token)
           .expect(404)
           .end(done);
       });
     });
   });
-  describe('PUT	/tasks/:id', () => {
+  describe('PUT	/tournaments/:id', () => {
     describe('status	204', () => {
       it('updates	a	task', done => {
-        request.put(`/tasks/${fakeTask.id}`)
+        request.put(`/tournaments/${fakeTask.id}`)
           .set('Authorization', token)
           .send({ title: 'Travel', done: true })
           .expect(204)
@@ -83,10 +83,10 @@ describe('Routes:	Tasks', () => {
       });
     });
   });
-  describe('DELETE	/tasks/:id', () => {
+  describe('DELETE	/tournaments/:id', () => {
     describe('status	204', () => {
       it('removes	a	task', done => {
-        request.delete(`/tasks/${fakeTask.id}`)
+        request.delete(`/tournaments/${fakeTask.id}`)
           .set('Authorization', token)
           .expect(204)
           .end(done);

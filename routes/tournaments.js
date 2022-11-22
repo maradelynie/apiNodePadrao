@@ -1,44 +1,45 @@
 module.exports = app => {
-  const Tasks = app.models.tasks;
-  app.route('/tasks')
+  const Tournaments = app.models.tournaments;
+  const Racers = app.models.racers;
+  app.route('/tournaments')
     .all(app.auth.authenticate())
     /**
-          *	@api	{get}	/tasks	Lista	tarefas
+          *	@api	{get}	/tournaments	Lista	tarefas
           *	@apiGroup	Tarefas
           *	@apiHeader	{String}	Authorization	Token	de	usuário
           *	@apiHeaderExample	{json}	Header
           *				{"Authorization":	"JWT	xyz.abc.123.hgf"}
-          *	@apiSuccess	{Object[]}	tasks	Lista	de	tarefas
-          *	@apiSuccess	{Number}	tasks.id	Id	de	registro
-          *	@apiSuccess	{String}	tasks.title	Título	da	tarefa
-          *	@apiSuccess	{Boolean}	tasks.done	Tarefa	foi	concluída?
-          *	@apiSuccess	{Date}	tasks.updated_at	Data	de	atualização
-          *	@apiSuccess	{Date}	tasks.created_at	Data	de	cadastro
-          *	@apiSuccess	{Number}	tasks.userId	Id	do	usuário
+          *	@apiSuccess	{Object[]}	tournaments	Lista	de	tarefas
+          *	@apiSuccess	{Number}	tournaments.id	Id	de	registro
+          *	@apiSuccess	{String}	tournaments.title	Título	da	tarefa
+          *	@apiSuccess	{Boolean}	tournaments.finished	Tarefa	foi	concluída?
+          *	@apiSuccess	{Date}	tournaments.updated_at	Data	de	atualização
+          *	@apiSuccess	{Date}	tournaments.created_at	Data	de	cadastro
+          *	@apiSuccess	{Number}	tournaments.UserId	Id	do	usuário
           *	@apiSuccessExample	{json}	Sucesso
           *				HTTP/1.1	200	OK
           *				[{
           *						"id":	1,
           *						"title":	"Estudar",
-          *						"done":	false
+          *						"finished":	false
           *						"updated_at":	"2015-09-24T15:46:51.778Z",
           *						"created_at":	"2015-09-24T15:46:51.778Z",
-          *						"userId":	1
+          *						"UserId":	1
           *				}]
           *	@apiErrorExample	{json}	Erro	de	consulta
           *				HTTP/1.1	412	Precondition	Failed
           */
     .get(async (req, res) => {
       try {
-        const where = { userId: req.user.id };
-        const result = await Tasks.findAll({ where });
+        const where = { UserId: req.user.id };
+        const result = await Tournaments.findAll({ where });
         res.json(result);
       } catch (err) {
         res.status(412).json({ msg: err.message });
       }
     })
     /**
-        *	@api	{post}	/tasks	Cadastra	uma	tarefas
+        *	@api	{post}	/tournaments	Cadastra	uma	tarefas
         *	@apiGroup	Tarefas
         *	@apiHeader	{String}	Authorization	Token	de	usuário
         *	@apiHeaderExample	{json}	Header
@@ -48,34 +49,34 @@ module.exports = app => {
         *				{"title":	"Estudar"}
         *	@apiSuccess	{Number}	id	Id	de	registro
         *	@apiSuccess	{String}	title	Título	da	tarefa
-        *	@apiSuccess	{Boolean}	done=false	Tarefa	foi	concluída?
+        *	@apiSuccess	{Boolean}	finished=false	Tarefa	foi	concluída?
         *	@apiSuccess	{Date}	updated_at	Data	de	atualização
         *	@apiSuccess	{Date}	created_at	Data	de	cadastro
-        *	@apiSuccess	{Number}	userId	Id	do	usuário
+        *	@apiSuccess	{Number}	UserId	Id	do	usuário
         *	@apiSuccessExample	{json}	Sucesso
         *				HTTP/1.1	200	OK
         *				{
         *						"id":	1,
         *						"title":	"Estudar",
-        *						"done":	false,
+        *						"finished":	false,
         *						"updated_at":	"2015-09-24T15:46:51.778Z",
         *						"created_at":	"2015-09-24T15:46:51.778Z",
-        *						"userId":	1
+        *						"UserId":	1
         *				}
         *	@apiErrorExample	{json}	Erro	de	consulta
         *				HTTP/1.1	412	Precondition	Failed
         */
     .post(async (req, res) => {
       try {
-        req.body.userId = req.user.id;
-        const result = await Tasks.create(req.body);
+        req.body.UserId = req.user.id;
+        const result = await Tournaments.create(req.body);
         res.json(result);
       } catch (err) {
         res.status(412).json({ msg: err.message });
       }
     });
   /**
-    *	@api	{get}	/tasks/:id	Exibe	uma	tarefa
+    *	@api	{get}	/tournaments/:id	Exibe	uma	tarefa
     *	@apiGroup	Tarefas
     *	@apiHeader	{String}	Authorization	Token	de	usuário
     *	@apiHeaderExample	{json}	Header
@@ -83,19 +84,19 @@ module.exports = app => {
     *	@apiParam	{id}	id	Id	da	tarefa
     *	@apiSuccess	{Number}	id	Id	de	registro
     *	@apiSuccess	{String}	title	Título	da	tarefa
-    *	@apiSuccess	{Boolean}	done	Tarefa	foi	concluída?
+    *	@apiSuccess	{Boolean}	finished	Tarefa	foi	concluída?
     *	@apiSuccess	{Date}	updated_at	Data	de	atualização
     *	@apiSuccess	{Date}	created_at	Data	de	cadastro
-    *	@apiSuccess	{Number}	userId	Id	do	usuário
+    *	@apiSuccess	{Number}	UserId	Id	do	usuário
     *	@apiSuccessExample	{json}	Sucesso
     *				HTTP/1.1	200	OK
     *				{
     *						"id":	1,
     *						"title":	"Estudar",
-    *						"done":	false
+    *						"finished":	false
     *						"updated_at":	"2015-09-24T15:46:51.778Z",
     *						"created_at":	"2015-09-24T15:46:51.778Z",
-    *						"userId":	1
+    *						"UserId":	1
     *				}
     *	@apiErrorExample	{json}	Tarefa	não	existe
     *				HTTP/1.1	404	Not	Found
@@ -103,13 +104,15 @@ module.exports = app => {
     *				HTTP/1.1	412	Precondition	Failed
     */
 
-  app.route('/tasks/:id')
+  app.route('/tournaments/:id')
     .all(app.auth.authenticate())
     .get(async (req, res) => {
       try {
         const { id } = req.params;
-        const where = { id, userId: req.user.id };
-        const result = await Tasks.findOne({ where });
+        const where = { id, UserId: req.user.id };
+        const tournament = await Tournaments.findOne({ where });
+        const racers = await Racers.findAll({ where: { TournamentId: id } });
+        const result = { ...tournament.dataValues, racers }
         if (result) {
           res.json(result);
         } else {
@@ -120,18 +123,18 @@ module.exports = app => {
       }
     })
     /**
-        *	@api	{put}	/tasks/:id	Atualiza	uma	tarefa
+        *	@api	{put}	/tournaments/:id	Atualiza	uma	tarefa
         *	@apiGroup	Tarefas
         *	@apiHeader	{String}	Authorization	Token	de	usuário
         *	@apiHeaderExample	{json}	Header
         *				{"Authorization":	"JWT	xyz.abc.123.hgf"}
         *	@apiParam	{id}	id	Id	da	tarefa
         *	@apiParam	{String}	title	Título	da	tarefa
-        *	@apiParam	{Boolean}	done	Tarefa	foi	concluída?
+        *	@apiParam	{Boolean}	finished	Tarefa	foi	concluída?
         *	@apiParamExample	{json}	Entrada
         *				{
         *						"title":	"Trabalhar",
-        *						"done":	true
+        *						"finished":	true
         *				}
         *	@apiSuccessExample	{json}	Sucesso
         *				HTTP/1.1	204	No	Content
@@ -141,16 +144,16 @@ module.exports = app => {
     .put(async (req, res) => {
       try {
         const { id } = req.params;
-        const where = { id, userId: req.user.id };
-        req.body.userId = req.user.id;
-        await Tasks.update(req.body, { where });
+        const where = { id, UserId: req.user.id };
+        req.body.UserId = req.user.id;
+        await Tournaments.update(req.body, { where });
         res.sendStatus(204);
       } catch (err) {
         res.status(412).json({ msg: err.message });
       }
     })
     /**
-          *	@api	{delete}	/tasks/:id	Exclui	uma	tarefa
+          *	@api	{delete}	/tournaments/:id	Exclui	uma	tarefa
           *	@apiGroup	Tarefas
           *	@apiHeader	{String}	Authorization	Token	de	usuário
           *	@apiHeaderExample	{json}	Header
@@ -165,8 +168,8 @@ module.exports = app => {
     .delete(async (req, res) => {
       try {
         const { id } = req.params;
-        const where = { id, userId: req.user.id };
-        await Tasks.destroy({ where });
+        const where = { id, UserId: req.user.id };
+        await Tournaments.destroy({ where });
         res.sendStatus(204);
       } catch (err) {
         res.status(412).json({ msg: err.message });
